@@ -1,0 +1,10 @@
+{
+    "User1": [
+        "full name",
+        "user1@example.com"
+    ],
+    "User2": [
+        "full name",
+        "user2@example.com"
+    ]
+}

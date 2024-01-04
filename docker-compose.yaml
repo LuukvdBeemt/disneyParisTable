@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  disneytable:
+    build:
+      context: .
+    container_name: disneytable
+    restart: unless-stopped
+    # ports: 
+    #   - '8080:8080'
+    environment:
+      - API_KEY=${API_KEY}
+      - AUTH_KEY=${AUTH_KEY}
+    volumes:
+      - ./data:/data
