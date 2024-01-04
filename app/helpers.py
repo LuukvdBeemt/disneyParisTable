@@ -113,8 +113,8 @@ def checkTable(date, partysize, restaurantId):
 
     try:
         availability = json_response[0]
-    except Exception as e:
-        printDated(e)
+    except KeyError:
+        printDated(f"{json_response['status']}: {json_response['error']}")
         return False
 
     availableSlots = []
