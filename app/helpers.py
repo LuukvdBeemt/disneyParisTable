@@ -115,6 +115,7 @@ def checkTable(date, partysize, restaurantId):
         availability = json_response[0]
     except Exception as e:
         printDated(e)
+        return False
 
     availableSlots = []
     for mealPeriod in availability['mealPeriods']:
