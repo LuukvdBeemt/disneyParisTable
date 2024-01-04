@@ -10,5 +10,21 @@
     "Hotel Cape Cod": [
         "Hotel New Port Bay Cape Cod",
         "H03R00"
-    ]
+    ],
+    "Hotel Yacht Club": [
+        "Disney Newport Bay Yacht Club",
+        "H03R03"
+    ],
+    "Hotel Manhattan": [
+        "Disney Hotel New York Manhattan Restaurant",
+        "H02R00"
+    ],
+    "Auberge de Cendrillon": [
+        "Auberge de Cendrillon Restaurant",
+        "P1NR01"
+    ],
+    "Walt’s restaurant": [
+        "Walt’s – an American restaurant",
+        "P1MR10"
+    ],
 }
