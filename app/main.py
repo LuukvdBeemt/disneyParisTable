@@ -10,6 +10,8 @@ tableUrl_1 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/boo
 tableUrl_2 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/nl-nl'
 tableUrl_3 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-us'
 tableUrl_4 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-gb'
+tableUrl_5 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-ie'
+tableUrl_6 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/nl-be'
 
 def main():
     dates = [
@@ -58,6 +60,14 @@ def main():
             availableRestaurantIds = checkTable(tableUrl_4, os.environ['AUTH_KEY'], date, 2)
         if not availableRestaurantIds:
             availableRestaurantIds = checkTable(tableUrl_4, os.environ['AUTH_KEY_SECONDARY'], date, 2)
+        if not availableRestaurantIds:
+            availableRestaurantIds = checkTable(tableUrl_5, os.environ['AUTH_KEY'], date, 2)
+        if not availableRestaurantIds:
+            availableRestaurantIds = checkTable(tableUrl_5, os.environ['AUTH_KEY_SECONDARY'], date, 2)
+        if not availableRestaurantIds:
+            availableRestaurantIds = checkTable(tableUrl_6, os.environ['AUTH_KEY'], date, 2)
+        if not availableRestaurantIds:
+            availableRestaurantIds = checkTable(tableUrl_6, os.environ['AUTH_KEY_SECONDARY'], date, 2)
 
         if availableRestaurantIds:
             for friendly_name, restaurant_name_id in restaurants.items():
