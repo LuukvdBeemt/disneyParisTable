@@ -117,7 +117,7 @@ def checkTable(date, partysize, restaurantId):
         printDated(f"{json_response['status']}: {json_response['error']}")
         return False
     except IndexError:
-        printDated(f"IndexError: {json_responses}")
+        printDated(f"IndexError: {json_response}")
         return False
 
     availableSlots = []
