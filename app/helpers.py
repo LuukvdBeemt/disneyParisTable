@@ -81,6 +81,7 @@ def gmail_send_message(service, to, subject, content):
 
 def checkTable(date, partysize, restaurantId):
     tableUrl = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-int'
+    tableUrl = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/nl-nl'
     payload = {
         'date': date,
         'partyMix': partysize,
