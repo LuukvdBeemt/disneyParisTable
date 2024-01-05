@@ -37,12 +37,13 @@ def main():
     printDated("Loading recipients file")
     recipients = load_data(RECIPIENTS_FILE_PATH)
     
-    for friendly_name, restaurant_name_id in restaurants.items():
-        restaurant_name, restaurant_id = restaurant_name_id
-        printDated(f"Checking availability for {friendly_name}")
-        for date in dates:
-            slots = checkTable(date, 2, restaurant_id)
-            if slots:
+    for date in dates:
+        availableRestaurantIds = checkTable(date, 2)
+        for friendly_name, restaurant_name_id in restaurants.items():
+            restaurant_name, restaurant_id = restaurant_name_id
+            printDated(f"Checking availability for {friendly_name}")
+
+            if restaurant_id in availableRestaurantIds:
                 subject = f"Tafel beschikbaar bij {friendly_name} op {date}"
                 content = f"Er is op {datetime.datetime.today().replace(microsecond=0).isoformat()} een tafel gevonden bij {restaurant_name} voor {2} personen op {date}."
                 printDated(subject)

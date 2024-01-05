@@ -1,1 +1,1 @@
-0 * * * * python /app/main.py >> /dev/stdout
+*/5 * * * * python /app/main.py >> /dev/stdout

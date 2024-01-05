@@ -19,9 +19,9 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.compose']
 
 
 def main():
-    # checkTable('2024-01-11', 2, 'P2TR02')
-    service = get_gmail_service()
-    gmail_send_message(service, "example@example.com", "Test", "Testing gmail api")
+    checkTable('2024-01-11', 2)
+    # service = get_gmail_service()
+    # gmail_send_message(service, "example@example.com", "Test", "Testing gmail api")
 
 
 def get_gmail_service():
@@ -79,21 +79,20 @@ def gmail_send_message(service, to, subject, content):
   return send_message
 
 
-def checkTable(date, partysize, restaurantId):
+def checkTable(date, partysize):
     tableUrl = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-int'
-    tableUrl = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/nl-nl'
+
     payload = {
         'date': date,
         'partyMix': partysize,
-        'restaurantId': restaurantId,
-        'sourceSite': 'web'
+        # 'restaurantId': restaurantId,
+        'session': 3 # Without this an empty list is returned.
     }
     
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
-        'content-type': 'application/json',
-        'x-api-key': os.environ['API_KEY'],
-        'Authorization': os.environ['AUTH_KEY']
+        'User-Agent': '',
+        'Authorization': os.environ['AUTH_KEY'],
+        'x-api-key': os.environ['API_KEY']
     }
 
     json_payload = json.dumps(payload)
@@ -120,14 +119,18 @@ def checkTable(date, partysize, restaurantId):
     except IndexError:
         printDated(f"IndexError: {json_response}")
         return False
+    
+    # availableSlots = []
+    availableRestaurantIds = set()
+    for availability in json_response:
+        for mealPeriod in availability['mealPeriods']:
+            for slot in mealPeriod['slotList']:
+                if slot['available'] == 'true':
+                    # availableSlots.append(slot)
+                    availableRestaurantIds.add(availability['restaurantId'])
 
-    availableSlots = []
-    for mealPeriod in availability['mealPeriods']:
-        for slot in mealPeriod['slotList']:
-            if slot['available'] == 'true':
-                availableSlots.append(slot)
-
-    return availableSlots
+    printDated(availableRestaurantIds)
+    return availableRestaurantIds
 
 
 def load_data(path):
