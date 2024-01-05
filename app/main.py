@@ -39,17 +39,20 @@ def main():
     
     for date in dates:
         availableRestaurantIds = checkTable(date, 2)
-        for friendly_name, restaurant_name_id in restaurants.items():
-            restaurant_name, restaurant_id = restaurant_name_id
-            printDated(f"Checking availability for {friendly_name}")
+        if availableRestaurantIds:
+            for friendly_name, restaurant_name_id in restaurants.items():
+                restaurant_name, restaurant_id = restaurant_name_id
+                printDated(f"Checking availability for {friendly_name}")
 
-            if restaurant_id in availableRestaurantIds:
-                subject = f"Tafel beschikbaar bij {friendly_name} op {date}"
-                content = f"Er is op {datetime.datetime.today().replace(microsecond=0).isoformat()} een tafel gevonden bij {restaurant_name} voor {2} personen op {date}."
-                printDated(subject)
-                for recipient_friendly_name, recipient_name_email in recipients.items():
-                    recipient_name, recipient_email = recipient_name_email
-                    gmail_send_message(service, recipient_email, subject, content)
+                if restaurant_id in availableRestaurantIds:
+                    subject = f"Tafel beschikbaar bij {friendly_name} op {date}"
+                    content = f"Er is op {datetime.datetime.today().replace(microsecond=0).isoformat()} een tafel gevonden bij {restaurant_name} voor {2} personen op {date}."
+                    printDated(subject)
+                    for recipient_friendly_name, recipient_name_email in recipients.items():
+                        recipient_name, recipient_email = recipient_name_email
+                        gmail_send_message(service, recipient_email, subject, content)
+        else:
+            printDated("Error, no restaurants found")
 
 
 if __name__ == '__main__':
