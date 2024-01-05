@@ -11,5 +11,6 @@ services:
     environment:
       - API_KEY=${API_KEY}
       - AUTH_KEY=${AUTH_KEY}
+      - AUTH_KEY_SECONDARY=${AUTH_KEY_SECONDARY}
     volumes:
       - ./data:/data
