@@ -79,8 +79,7 @@ def gmail_send_message(service, to, subject, content):
   return send_message
 
 
-def checkTable(date, partysize):
-    tableUrl = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-int'
+def checkTable(tableUrl, auth_key, date, partysize):
 
     payload = {
         'date': date,
@@ -91,7 +90,7 @@ def checkTable(date, partysize):
     
     headers = {
         'User-Agent': '',
-        'Authorization': os.environ['AUTH_KEY'],
+        'Authorization': auth_key,
         'x-api-key': os.environ['API_KEY']
     }
 
@@ -129,7 +128,7 @@ def checkTable(date, partysize):
                     # availableSlots.append(slot)
                     availableRestaurantIds.add(availability['restaurantId'])
 
-    printDated(availableRestaurantIds)
+    # printDated(availableRestaurantIds)
     return availableRestaurantIds
 
 

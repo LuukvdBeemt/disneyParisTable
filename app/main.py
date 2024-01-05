@@ -5,7 +5,12 @@ import os
 
 RESTAURANT_FILE_PATH = '/data/restaurants.json'
 RECIPIENTS_FILE_PATH = '/data/recipients.json'
-    
+
+tableUrl_1 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-int'
+tableUrl_2 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/nl-nl'
+tableUrl_3 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-us'
+tableUrl_4 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-gb'
+
 def main():
     dates = [
         '2024-01-11',
@@ -38,7 +43,22 @@ def main():
     recipients = load_data(RECIPIENTS_FILE_PATH)
     
     for date in dates:
-        availableRestaurantIds = checkTable(date, 2)
+        availableRestaurantIds = checkTable(tableUrl_1, os.environ['AUTH_KEY'], date, 2)
+        if not availableRestaurantIds:
+            availableRestaurantIds = checkTable(tableUrl_1, os.environ['AUTH_KEY_SECONDARY'], date, 2)
+        if not availableRestaurantIds:
+            availableRestaurantIds = checkTable(tableUrl_2, os.environ['AUTH_KEY'], date, 2)
+        if not availableRestaurantIds:
+            availableRestaurantIds = checkTable(tableUrl_2, os.environ['AUTH_KEY_SECONDARY'], date, 2)
+        if not availableRestaurantIds:
+            availableRestaurantIds = checkTable(tableUrl_3, os.environ['AUTH_KEY'], date, 2)
+        if not availableRestaurantIds:
+            availableRestaurantIds = checkTable(tableUrl_3, os.environ['AUTH_KEY_SECONDARY'], date, 2)
+        if not availableRestaurantIds:
+            availableRestaurantIds = checkTable(tableUrl_4, os.environ['AUTH_KEY'], date, 2)
+        if not availableRestaurantIds:
+            availableRestaurantIds = checkTable(tableUrl_4, os.environ['AUTH_KEY_SECONDARY'], date, 2)
+
         if availableRestaurantIds:
             for friendly_name, restaurant_name_id in restaurants.items():
                 restaurant_name, restaurant_id = restaurant_name_id
