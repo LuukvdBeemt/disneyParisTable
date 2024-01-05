@@ -96,7 +96,7 @@ def checkTable(tableUrl, auth_key, date, partysize):
 
     json_payload = json.dumps(payload)
 
-    printDated(f"Sending request {json_payload}")
+    # printDated(f"Sending request {json_payload}")
     x = requests.post(tableUrl, headers=headers, data=json_payload)
 
     if x.status_code != 200:
