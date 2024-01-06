@@ -113,7 +113,10 @@ def checkTable(tableUrl, auth_key, date, partysize):
     try:
         availability = json_response[0]
     except KeyError:
-        printDated(f"{json_response['status']}: {json_response['error']}")
+        try:
+            printDated(f"{json_response['status']}: {json_response['error']}")
+        except:
+            print(json_response)
         return False
     except IndexError:
         printDated(f"IndexError: {json_response}")

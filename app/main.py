@@ -11,7 +11,7 @@ tableUrl_2 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/boo
 tableUrl_3 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-ie'
 tableUrl_4 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/nl-be'
 tableUrl_5 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-int'
-tableUrl_6 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/nl-nl'
+tableUrl_6 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/be-be'
 
 def main():
     dates = [
