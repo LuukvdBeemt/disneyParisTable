@@ -1,1 +1,1 @@
-*/10 * * * * python /app/main.py >> /dev/stdout
+*/30 * * * * python /app/main.py >> /dev/stdout
