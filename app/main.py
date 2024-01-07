@@ -48,7 +48,7 @@ def main():
         availableRestaurantIds = checkTable(tableUrls[i], load_disney_token(), date, 2)
         while not availableRestaurantIds and i < len(tableUrls):
             i += 1
-            printDated(f"Trying url {i+1}")
+            printDated(f"Trying url {i+1}/{len(tableUrls)}")
             availableRestaurantIds = checkTable(tableUrls[i], load_disney_token(), date, 2)
 
         if availableRestaurantIds:
