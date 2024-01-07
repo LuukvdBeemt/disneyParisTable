@@ -10,7 +10,7 @@ services:
     #   - '8080:8080'
     environment:
       - API_KEY=${API_KEY}
-      - AUTH_KEY=${AUTH_KEY}
-      - AUTH_KEY_SECONDARY=${AUTH_KEY_SECONDARY}
+      - DISNEY_USERNAME=${DISNEY_USERNAME}
+      - DISNEY_PASSWORD=${DISNEY_PASSWORD}
     volumes:
       - ./data:/data

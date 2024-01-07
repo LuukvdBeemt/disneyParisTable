@@ -14,14 +14,16 @@ from email.message import EmailMessage
 
 TOKEN_FILE_PATH = '/data/token.json'
 CREDENTIALS_FILE_PATH = '/data/credentials.json'
+DISNEYTOKEN_PATH = '/data/disneyToken.json'
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.compose']
 
 
 def main():
-    checkTable('2024-01-11', 2)
     # service = get_gmail_service()
     # gmail_send_message(service, "example@example.com", "Test", "Testing gmail api")
+
+    pass
 
 
 def get_gmail_service():
@@ -52,7 +54,6 @@ def gmail_send_message(service, to, subject, content):
   Print the returned  message id
   Returns: Message object, including message id
   """
-
   try:
     message = EmailMessage()
 
@@ -79,8 +80,56 @@ def gmail_send_message(service, to, subject, content):
   return send_message
 
 
-def checkTable(tableUrl, auth_key, date, partysize):
+# Function to load klas data from JSON file
+def load_disney_token():
+    if os.path.exists(DISNEYTOKEN_PATH):
+        with open(DISNEYTOKEN_PATH, "r") as f:
+            return json.load(f)['auth_token']
+    else:
+        return {}
+    
 
+# Function to save klas data to JSON file
+def save_disney_token(data):
+    with open(DISNEYTOKEN_PATH, "w") as f:
+        json.dump(data, f, indent=4)
+
+
+def refresh_disney_token(username, password, old_auth_key):
+    loginUrl = 'https://registerdisney.go.com/jgc/v8/client/TPR-DLP.WEB-PROD/guest/reauth'
+    payload = {
+        'loginValue': username,
+        'password': password
+    }
+    
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0',
+        'Authorization': f'Bearer {old_auth_key}',
+        'content-type': 'application/json'
+    }
+
+    json_payload = json.dumps(payload)
+
+    x = requests.post(loginUrl, headers=headers, data=json_payload)
+
+    json_response = json.loads(x.text)
+
+    try:
+        new_auth_token = json_response['data']['token']['access_token']
+    except TypeError:
+        printDated("Could not refresh token: ")
+        print(json_response)
+
+    data = {
+        'auth_token': new_auth_token
+    }
+    save_disney_token(data)
+    printDated("Token succesfully refreshed")
+
+    return new_auth_token
+
+
+def checkTable(tableUrl, auth_key, date, partysize):
     payload = {
         'date': date,
         'partyMix': partysize,
@@ -90,7 +139,7 @@ def checkTable(tableUrl, auth_key, date, partysize):
     
     headers = {
         'User-Agent': '',
-        'Authorization': auth_key,
+        'Authorization': f'Bearer {auth_key}',
         'x-api-key': os.environ['API_KEY']
     }
 
@@ -105,33 +154,28 @@ def checkTable(tableUrl, auth_key, date, partysize):
 
     json_response = json.loads(x.text)
 
-    # if 'status' in json_response.keys():
-    #     if json_response['status'] == 429:
-    #         printDated(json_response['status'])
-    #         return False
-
     try:
         availability = json_response[0]
     except KeyError:
         try:
             printDated(f"{json_response['status']}: {json_response['error']}")
         except:
-            print(json_response)
+            if 'BAD_AUTHZ_TOKEN' in json_response:
+                print("Refreshing auth token")
+                refresh_disney_token(os.environ.get['DISNEY_USERNAME'], os.environ.get['DISNEY_PASSWORD'], load_disney_token())
         return False
     except IndexError:
         printDated(f"IndexError: {json_response}")
         return False
     
-    # availableSlots = []
+    # Check for open spots in returned restaurant data
     availableRestaurantIds = set()
     for availability in json_response:
         for mealPeriod in availability['mealPeriods']:
             for slot in mealPeriod['slotList']:
                 if slot['available'] == 'true':
-                    # availableSlots.append(slot)
                     availableRestaurantIds.add(availability['restaurantId'])
 
-    # printDated(availableRestaurantIds)
     return availableRestaurantIds
 
 

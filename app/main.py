@@ -6,12 +6,25 @@ import os
 RESTAURANT_FILE_PATH = '/data/restaurants.json'
 RECIPIENTS_FILE_PATH = '/data/recipients.json'
 
-tableUrl_1 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-us'
-tableUrl_2 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-gb'
-tableUrl_3 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-ie'
-tableUrl_4 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/nl-be'
-tableUrl_5 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-int'
-tableUrl_6 = 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/be-be'
+# Use all urls to bypass rate limits
+tableUrls = [
+    'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/nl-be',
+    'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/fr-be',
+    'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/fr-fr',
+    'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/de-at',
+    'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/da-dk',
+    'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-ie',
+    'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/pt-pt',
+    'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/de-de',
+    'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/it-it',
+    'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/fr-ch',
+    'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/de-ch',
+    'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/es-es',
+    # 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/nl-nl',
+    'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-gb',
+    # 'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-int',
+    'https://dlp-is-sales-drs-book-dine.wdprapps.disney.com/prod/v4/book-dine/availabilities/en-usd',
+]
 
 def main():
     dates = [
@@ -20,21 +33,6 @@ def main():
         '2024-01-13',
     ]
     
-    # restaurants = [
-    #     {
-    #         'name': 'Ratatouille',
-    #         'id': 'P2TR02',
-    #     },
-    #     {
-    #         'name': 'Captain Jack',
-    #         'id': 'P1AR00',
-    #     },
-    #     {
-    #         'name': 'Cape Cod',
-    #         'id': 'H03R00',
-    #     },
-    # ]
-
     printDated("Getting gmail service")
     service = get_gmail_service()
 
@@ -45,29 +43,13 @@ def main():
     recipients = load_data(RECIPIENTS_FILE_PATH)
     
     for date in dates:
-        availableRestaurantIds = checkTable(tableUrl_1, os.environ['AUTH_KEY'], date, 2)
-        if not availableRestaurantIds:
-            availableRestaurantIds = checkTable(tableUrl_1, os.environ['AUTH_KEY_SECONDARY'], date, 2)
-        if not availableRestaurantIds:
-            availableRestaurantIds = checkTable(tableUrl_2, os.environ['AUTH_KEY'], date, 2)
-        if not availableRestaurantIds:
-            availableRestaurantIds = checkTable(tableUrl_2, os.environ['AUTH_KEY_SECONDARY'], date, 2)
-        if not availableRestaurantIds:
-            availableRestaurantIds = checkTable(tableUrl_3, os.environ['AUTH_KEY'], date, 2)
-        if not availableRestaurantIds:
-            availableRestaurantIds = checkTable(tableUrl_3, os.environ['AUTH_KEY_SECONDARY'], date, 2)
-        if not availableRestaurantIds:
-            availableRestaurantIds = checkTable(tableUrl_4, os.environ['AUTH_KEY'], date, 2)
-        if not availableRestaurantIds:
-            availableRestaurantIds = checkTable(tableUrl_4, os.environ['AUTH_KEY_SECONDARY'], date, 2)
-        if not availableRestaurantIds:
-            availableRestaurantIds = checkTable(tableUrl_5, os.environ['AUTH_KEY'], date, 2)
-        if not availableRestaurantIds:
-            availableRestaurantIds = checkTable(tableUrl_5, os.environ['AUTH_KEY_SECONDARY'], date, 2)
-        if not availableRestaurantIds:
-            availableRestaurantIds = checkTable(tableUrl_6, os.environ['AUTH_KEY'], date, 2)
-        if not availableRestaurantIds:
-            availableRestaurantIds = checkTable(tableUrl_6, os.environ['AUTH_KEY_SECONDARY'], date, 2)
+        printDated(f'Fetching availabilities for {date}')
+        i = 0
+        availableRestaurantIds = checkTable(tableUrls[i], load_disney_token(), date, 2)
+        while not availableRestaurantIds and i < len(tableUrls):
+            i += 1
+            printDated(f"Trying url {i+1}")
+            availableRestaurantIds = checkTable(tableUrls[i], load_disney_token(), date, 2)
 
         if availableRestaurantIds:
             for friendly_name, restaurant_name_id in restaurants.items():
@@ -82,7 +64,7 @@ def main():
                         recipient_name, recipient_email = recipient_name_email
                         gmail_send_message(service, recipient_email, subject, content)
         else:
-            printDated("Error, no restaurants found")
+            printDated("ERROR: no restaurants found after trying all urls")
 
 
 if __name__ == '__main__':
