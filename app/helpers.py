@@ -162,7 +162,7 @@ def checkTable(tableUrl, auth_key, date, partysize):
         except:
             if 'BAD_AUTHZ_TOKEN' in json_response:
                 print("Refreshing auth token")
-                refresh_disney_token(os.environ.get['DISNEY_USERNAME'], os.environ.get['DISNEY_PASSWORD'], load_disney_token())
+                refresh_disney_token(os.environ['DISNEY_USERNAME'], os.environ['DISNEY_PASSWORD'], load_disney_token())
         return False
     except IndexError:
         printDated(f"IndexError: {json_response}")

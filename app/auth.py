@@ -6,7 +6,7 @@ from helpers import load_disney_token, save_disney_token, printDated
 
 
 def main():
-    refresh_disney_token(os.environ.get['DISNEY_USERNAME'], os.environ.get['DISNEY_PASSWORD'], load_disney_token())
+    refresh_disney_token(os.environ['DISNEY_USERNAME'], os.environ['DISNEY_PASSWORD'], load_disney_token())
 
 
 def refresh_disney_token(username, password, old_auth_key):
@@ -33,6 +33,7 @@ def refresh_disney_token(username, password, old_auth_key):
     except TypeError:
         printDated("Could not refresh token: ")
         print(json_response)
+        return False
 
     data = {
         'auth_token': new_auth_token
