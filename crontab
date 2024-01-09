@@ -1,2 +1,2 @@
-*/30 * * * * python /app/main.py >> /dev/stdout
-0 */6 * * * python /app/auth.py >> /dev/stdout
+*/10 * * * * python /app/main.py >> /dev/stdout
+0 */12 * * * python /app/auth.py >> /dev/stdout
